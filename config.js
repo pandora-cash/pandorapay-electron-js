@@ -1,6 +1,5 @@
 module.exports = {
     goArgv: [
-        '--network=devnet',
-        '--new-devnet',
+        '--network=mainnet',
     ],
 }
