@@ -1,6 +1,6 @@
 module.exports = {
+    name: "PandoraPay",
     goArgv: [
-        '--network=devnet',
-        '--new-devnet',
+        '--network=mainnet',
     ],
 }

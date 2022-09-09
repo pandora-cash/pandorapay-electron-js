@@ -19,6 +19,18 @@ npm run paclage-mac
 npm run paclage-linux
 ```
 
+## Release
+```
+./release-builder.sh
+```
+
+### build win32 on linux
+
+install wine64 and wine32
+```
+sudo apt-get install wine64 wine32
+```
+
 ## Tor Proxy
 edit `.env` file
 ```

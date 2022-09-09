@@ -52,16 +52,24 @@ async function createWindow() {
     console.log("platform", platform )
 
     if (arch === 'x64') arch = 'amd64'
-    if (arch === 'x86') arch = '386'
-
+    else if (arch === 'x86' || arch === 'ia32') arch = '386'
+    else {
+        console.error("Invalid architecture", arch)
+        process.exit(0)
+    }
 
     if (!process.env.HELPER_DISABLED){
-        const filename = `./dist/helper/pandora-electron-helper-${arch}-${platform}${platform === 'window' ? '.exe' : ''}`
-        if ( !fs.existsSync(filename)) {
-            console.error("Electron helper not found", filename)
+
+        const filename = () => path.join(__dirname, `helper/pandora-electron-helper-${platform}-${arch}${platform === 'win32' ? '.exe' : ''}`)
+
+        if ( !fs.existsSync(filename())&& os.arch() === 'x64' )
+            arch = '386'
+
+        if ( !fs.existsSync( filename() )) {
+            console.error("Electron helper not found", filename() )
             process.exit(0)
         }
-        const out = execute(filename, [`--tcp-server-port=${helperPort}`, ...config.goArgv ])
+        const out = execute(filename(), [`--tcp-server-port=${helperPort}`, ...config.goArgv ])
         helperChild = out.child
     }
 
@@ -81,9 +89,8 @@ async function createWindow() {
         if (url.indexOf('?') > 0)
             url = url.slice(0, url.indexOf('?'))
 
-        console.log("url", url)
+        //console.log("url", url)
 
-        //console.log(url);
         callback({path: url});
     });
 
@@ -129,13 +136,15 @@ async function createWindow() {
 
 electron.app.on("ready", ()=>{
 
+    const filePath = path.join(__dirname, 'dist/index.html')
+
     //append script electron-app.js in page head
     const script = `<script src="/electron-app.js"></script>`
-    const text = fs.readFileSync('./dist/index.html').toString()
+    const text = fs.readFileSync( filePath ).toString()
     if (text.indexOf(script) === -1){
         const p = text.indexOf("<head>")+"<head>".length
         const newText = [text.slice( 0, p ), script, text.slice(p)].join('')
-        fs.writeFileSync('./dist/index.html', Buffer.from(newText) )
+        fs.writeFileSync(filePath, Buffer.from(newText) )
     }
     createWindow()
 
