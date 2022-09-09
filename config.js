@@ -1,5 +1,5 @@
 module.exports = {
-    name: "PandoraPay",
+    name: "Pandora Cash",
     goArgv: [
         '--network=mainnet',
     ],

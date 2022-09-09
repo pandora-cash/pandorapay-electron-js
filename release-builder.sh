@@ -2,7 +2,7 @@ echo "release using electron-builder"
 
 ./build.sh wasm wallet electron-helper
 
-name="pandora-pay"
+name="pandora-cash"
 
 npm run builder
 

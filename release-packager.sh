@@ -2,7 +2,7 @@ echo "release using electron-packager"
 
 ./build.sh wasm wallet electron-helper
 
-name="pandora-pay"
+name="pandora-cash"
 argsWin="--icon=assets/icons/win/icon.ico  --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName='${name}'"
 args=" --overwrite ${name} --prune=true --out=release-packager-builds --ignore='^/release-packager-builds' --ignore='^/release-builder-builds' --ignore='^/_build' --ignore='^/helper' --ignore='^/build.sh' --ignore='^/release.sh' --ignore='^/.idea' --ignore='^/assets' "
 argsLinux="--icon=assets/icons/mac/icon.icns "
