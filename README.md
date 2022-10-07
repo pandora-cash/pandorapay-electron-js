@@ -1,27 +1,30 @@
 # pandorapay-electron-js
 
 ## Installation
-```
-npm install
-./build.sh
-```
+1. install nodejs
+2. `npm install` (install node modules)
+3. `./build.sh` (build dist files - wasm, electron-helper and wallet bundle )
 
 ## Running
 ```
 npm run start
 ```
 
-## Build
+## Build tests
 ```
-npm run build
-npm run paclage-win
-npm run paclage-mac
-npm run paclage-linux
+npm run test-builder
+npm run test-packager
 ```
 
 ## Release
+using electron-builder  
 ```
 ./release-builder.sh
+```
+
+using electron-packager
+```
+./release-packager.sh
 ```
 
 ### build win32 on linux
