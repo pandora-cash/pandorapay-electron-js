@@ -48,4 +48,7 @@ if [[ "$*" == *wallet* ]]; then
   rm ./dist/wasm/PandoraPay-wallet-helper.wasm.br
   rm ./dist/wasm/PandoraPay-wallet-main.wasm.gz
   rm ./dist/wasm/PandoraPay-wallet-main.wasm.br
+
+  node ./init-script.js
 fi
+
