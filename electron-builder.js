@@ -1,7 +1,9 @@
 const files = [
+    "!_build/",
     "!release-packager-builds/",
     "!release-builder-builds/",
     "!build.sh",
+    "!electron-builder-test.js",
     "!release-builder.sh",
     "!release-packager.sh",
 ]

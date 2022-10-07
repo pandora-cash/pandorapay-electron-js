@@ -21,7 +21,7 @@ function execute(fileName, params, path) {
 
     let child
     const promise = new Promise((resolve, reject) => {
-        child = exec(fileName, params, { cwd: path, stdio: ['pipe', 'pipe', 'ignore'] }, (err, data) => {
+        child = exec(fileName, params, { cwd: path, stdio: ['pipe'] }, (err, data) => {
             if (err) reject(err);
             else resolve(data);
         });
@@ -70,6 +70,9 @@ async function createWindow() {
             process.exit(0)
         }
         const out = execute(filename(), [`--tcp-server-port=${helperPort}`, ...config.goArgv ])
+        out.promise.catch(e => {
+            console.error("There was an error starting the Helper", e)
+        })
         helperChild = out.child
     }
 
@@ -136,16 +139,6 @@ async function createWindow() {
 
 electron.app.on("ready", ()=>{
 
-    const filePath = path.join(__dirname, 'dist/index.html')
-
-    //append script electron-app.js in page head
-    const script = `<script src="/electron-app.js"></script>`
-    const text = fs.readFileSync( filePath ).toString()
-    if (text.indexOf(script) === -1){
-        const p = text.indexOf("<head>")+"<head>".length
-        const newText = [text.slice( 0, p ), script, text.slice(p)].join('')
-        fs.writeFileSync(filePath, Buffer.from(newText) )
-    }
     createWindow()
 
 });
