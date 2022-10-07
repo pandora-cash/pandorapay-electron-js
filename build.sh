@@ -25,8 +25,8 @@ if [[ "$*" == *electron-helper* ]]; then
   cd ../go-pandora-pay/ || exit
   ./scripts/build-electron-helper.sh
 
-  mkdir ../pandorapay-electron-js/dist/helper
-  cp ./builds/electron_helper/bin/* ../pandorapay-electron-js/dist/helper
+  mkdir -p ../pandorapay-electron-js/helper
+  cp ./builds/electron_helper/bin/* ../pandorapay-electron-js/helper
   mkdir -p ../pandorapay-electron-js/helper
   cp ./builds/electron_helper/bin/* ../pandorapay-electron-js/helper
 
