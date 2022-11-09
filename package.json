@@ -6,8 +6,8 @@
   "version": "0.0.1",
   "scripts": {
     "start": "electron .",
-    "build": "electron-packager . --overwrite --out=release-builds",
-    "builder": "electron-builder -mwl --config electron-builder.js"
+    "test-builder": "electron-builder -l --config electron-builder-test.js",
+    "test-packager": "electron-packager . --overwrite --out=release-packager-builds"
   },
   "devDependencies": {
     "electron": "^20.1.2",
