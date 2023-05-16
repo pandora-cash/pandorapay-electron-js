@@ -1,7 +1,7 @@
 const files = [
     "!_build/",
-    "!release-packager-builds/",
-    "!release-builder-builds/",
+    "!bin-packager/",
+    "!bin-builder/",
     "!build.sh",
     "!electron-builder-test.js",
     "!release-builder.sh",
@@ -11,24 +11,37 @@ const files = [
 const config = require('./config')
 const os = require("os");
 
+helperWindowsIgnore = ["!helper/pandora-electron-helper-windows-386.exe", "!helper/pandora-electron-helper-windows-amd64.exe",
+    "!helper/pandora-electron-helper-windows-arm64.exe",]
+
+helperLinuxIgnore = ["!helper/pandora-electron-helper-linux-386","!helper/pandora-electron-helper-linux-amd64",
+    "!helper/pandora-electron-helper-linux-arm64", "!helper/pandora-electron-helper-linux-armv7l"]
+
+helperDarwinIgnore = ["!helper/pandora-electron-helper-darwin-amd64",
+    "!helper/pandora-electron-helper-darwin-arm64",]
+
 module.exports = {
+
     directories: {
         buildResources: 'electron-build',
-        output: 'release-builder-builds',
+        output: 'bin-builder',
     },
     mac: {
         category: "public.app-category.utilities",
         icon: "assets/icons/mac/icon.icns",
         target: [
             "pkg",
-            (os.arch() === 'darwin') ? 'dmg' : 'zip',
+            "dmg",
+            "mas",
+            "7z",
+            "zip",
+            "tar.gz",
         ],
+        type: "distribution",
         files: [
             ...files,
-            "!helper/pandora-electron-helper-linux-386",
-            "!helper/pandora-electron-helper-linux-amd64",
-            "!helper/pandora-electron-helper-windows-386.exe",
-            "!helper/pandora-electron-helper-windows-amd64.exe",
+            ...helperLinuxIgnore,
+            ...helperWindowsIgnore,
         ],
     },
     linux: {
@@ -36,28 +49,38 @@ module.exports = {
         icon: "assets/icons/mac/icon.icns",
         target: [
             "AppImage",
-            "tar.gz"
+            "tar.gz",
+            "snap",
+            "deb",
+            "rpm",
+            "tar.gz",
+            "apk",
         ],
+        vendor: config.name,
+        maintainer: config.name,
+        synopsis: config.description,
+        description: config.description,
+        desktop: config.name,
         files: [
             ...files,
-            "!helper/pandora-electron-helper-darwin-amd64",
-            "!helper/pandora-electron-helper-linux-386",
-            "!helper/pandora-electron-helper-windows-386.exe",
-            "!helper/pandora-electron-helper-windows-amd64.exe",
+            ...helperWindowsIgnore,
+            ...helperDarwinIgnore,
         ]
     },
     win:{
         publisherName: config.name,
         target: [
-            "nsis",
-            "portable",
+            {target: "nsis", "arch": [ "ia32", "x64" ] },
+            {target: "portable", "arch": [ "ia32", "x64" ] },
+            {target: "zip", "arch": [ "ia32", "x64" ] },
+            {target: "msi", "arch": [ "ia32", "x64" ] },
+            //"appx", //AppX is supported only on Windows 10 or Windows Server 2012 R2 (version number 6.3+)
         ],
         icon: "assets/icons/win/icon.ico",
         files: [
             ...files,
-            "!helper/pandora-electron-helper-darwin-amd64",
-            "!helper/pandora-electron-helper-linux-386",
-            "!helper/pandora-electron-helper-linux-amd64",
+            ...helperDarwinIgnore,
+            ...helperLinuxIgnore,
         ],
     },
     dmg: {

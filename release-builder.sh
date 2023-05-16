@@ -2,5 +2,10 @@ echo "release using electron-builder"
 
 ./build.sh wasm wallet electron-helper
 
-electron-builder -mwl --config electron-builder.js
+args="-lw"
 
+if [ "$(uname)" == "Darwin" ]; then #Mac OS X platform
+	args="-mlw"
+fi
+
+electron-builder ${args} --config electron-builder.js
