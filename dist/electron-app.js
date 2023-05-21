@@ -3,6 +3,18 @@ console.log("Electron App")
 window.PandoraPayWalletOptions = {
     intro: {
         loadWasmHelper: false,
+        compression: "gz",
+    },
+    setup: {
+        enabled: true,
+        resultCb: data => {
+
+            window.api.send("toMain", {
+                type: "setup",
+                data,
+            })
+
+        }
     },
 }
 

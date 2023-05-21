@@ -8,7 +8,7 @@ const os = require("os");
 const config = require('./config');
 const logger = require('./logger');
 
-require('dotenv').config();
+require('dotenv').config({override: true});
 
 if (typeof process.env.DEBUG === "string")
     config.debug = process.env.DEBUG === "true";
@@ -37,9 +37,9 @@ function execute(fileName, params, path) {
 const WEB_FOLDER = 'dist';
 const PROTOCOL = 'file';
 
-async function start(win){
+async function start(win, page){
     await win.loadURL(url.format({
-        pathname: 'index.html',
+        pathname: page,
         protocol: PROTOCOL + ':',
         slashes: true
     }));
@@ -47,10 +47,10 @@ async function start(win){
 
 logger.open();
 
-logger.log("PROXY", process.env.PROXY_ADDRESS);
 const helperPort = Number.parseInt( process.env.HELPER_PORT || '25712' )
 
 function getHelperFilePath () {
+
     let arch = os.arch()
     let platform = os.platform()
 
@@ -93,6 +93,7 @@ async function createWindow() {
     }
 
     electron.protocol.interceptFileProtocol(PROTOCOL, (request, callback) => {
+
         // Strip protocol
         if (typeof request.url !== "string") throw "Invalid string"
 
@@ -115,8 +116,8 @@ async function createWindow() {
 
     // Create the browser window.
     const win = new electron.BrowserWindow( {
-        width: 1200,
-        height: 800,
+        width: 1280,
+        height: 768,
         webPreferences: {
             nodeIntegration: false,
             contextIsolation: true, // protect against prototype pollution
@@ -126,10 +127,11 @@ async function createWindow() {
         center:  true,
     });
 
-    electron.ipcMain.on("toMain", async (event, args )=>{
+    electron.ipcMain.on("toMain", async (event, args ) => {
 
         if (typeof args === "object"){
-            if (args.type === "helper-call"){
+
+            if (args.type === "helper-call" && !process.env.HELPER_DISABLED){
                 try{
                     const out = await electronHelperGet(args.method, args.data )
                     win.webContents.send("fromMain", {type: "helper-answer", id: args.id, out })
@@ -137,18 +139,36 @@ async function createWindow() {
                     win.webContents.send("fromMain", {type: "helper-answer", id: args.id, error: e.toString() })
                 }
             }
+
+            if (args.type === "setup"){
+
+                process.env.SETUP_CONNECTION_PROXY_TYPE = args.data.connectionProxyType;
+                process.env.SETUP_CONNECTION_PROXY_ADDRESS = args.data.connectionProxyAddress;
+
+                await setProxy(win)
+
+            }
+
         }
     })
 
     logger.log("Starting js app");
 
-    // and load the index.html of the app.
-    if (process.env.PROXY_ADDRESS){
-        await win.webContents.session.setProxy({proxyRules:process.env.PROXY_ADDRESS})
-        logger.log("PROXY SET", process.env.PROXY_ADDRESS );
+    await start(win, 'index.html')
+
+}
+
+async function setProxy(win){
+
+    if (process.env.SETUP_CONNECTION_PROXY_TYPE === "tor"){
+        await win.webContents.session.setProxy({proxyRules: "socks5://127.0.0.1:9050"})
+    }else if (process.env.SETUP_CONNECTION_PROXY_TYPE === "i2p"){
+        await win.webContents.session.setProxy({proxyRules: "socks5://127.0.0.1:4444"})
+    }else if (process.env.SETUP_CONNECTION_PROXY_TYPE === "proxy"){
+        await win.webContents.session.setProxy({proxyRules: process.env.SETUP_CONNECTION_PROXY_ADDRESS})
     }
 
-    await start(win)
+    logger.log("PROXY SET", process.env.SETUP_CONNECTION_PROXY_TYPE, process.env.SETUP_CONNECTION_PROXY_ADDRESS );
 
 }
 
