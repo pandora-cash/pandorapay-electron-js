@@ -1,6 +1,6 @@
 {
   "name": "pandorapay-electron-js",
-  "main": "index.js",
+  "main": "src/index.js",
   "description": "desktop wallet",
   "author": "pandora pay",
   "email": "contact@pandorapay.com",
@@ -14,7 +14,7 @@
     "test-packager": "electron-packager . --overwrite --out=bin-packager"
   },
   "devDependencies": {
-    "electron": "^24.3.0",
+    "electron": "^24.3.1",
     "electron-builder": "^24.4.0",
     "electron-packager": "^17.1.1"
   },

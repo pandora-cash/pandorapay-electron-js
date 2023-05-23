@@ -10,7 +10,7 @@ helperLinux="helper/pandora-electron-helper-linux-386|helper/pandora-electron-he
 helperDarwin="helper/pandora-electron-helper-darwin-amd64|helper/pandora-electron-helper-darwin-arm64"
 
 getArgsIgnore(){
-	argsIgnore="--ignore='^/(_build|${dir}|bin-builder|bin-packager|build.sh|release-builder.sh|release-packager.sh|.idea|assets|electron-builder.js|electron-builder-test.js|$1)'"
+	argsIgnore="--ignore='^/(_build|${dir}|bin-builder|build.sh|release-builder.sh|release-packager.sh|init-script.js|.idea|assets|electron-builder.js|electron-builder-test.js|src/electron-entry-app.js|$1)'"
 }
 
 args=" --overwrite ${name} --prune=true --out=bin-packager"

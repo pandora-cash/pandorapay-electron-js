@@ -34,7 +34,7 @@ function execute(fileName, params, path) {
     }
 }
 
-const WEB_FOLDER = 'dist';
+const WEB_FOLDER = '../dist';
 const PROTOCOL = 'file';
 
 async function start(win, page){
@@ -179,10 +179,15 @@ electron.app.on("ready", ()=>{
 });
 
 electron.app.on('window-all-closed', () => {
-    if (helperChild){
-        helperChild.kill()
-        helperChild = undefined
+    try{
+        if (helperChild){
+            helperChild.kill()
+            helperChild = undefined
+        }
+    }catch(e){
+        logger.error("Error killing Helper", e)
     }
+
     if (process.platform !== 'darwin') {
         electron.app.quit()
     }

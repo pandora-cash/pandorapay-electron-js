@@ -38,16 +38,21 @@ if [[ "$*" == *wallet* ]]; then
 
   cd ../PandoraPay-wallet/ || exit
 
-  npm run build
+  npm run build-ui --skip-zip -- --mode=production
 
   cp -r ./dist/build/* ../pandorapay-electron-js/dist
 
   cd ../pandorapay-electron-js/ || exit
-  rm ./dist/wasm/PandoraPay-wallet-helper.wasm
-  rm ./dist/wasm/PandoraPay-wallet-helper.wasm.gz
-  rm ./dist/wasm/PandoraPay-wallet-helper.wasm.br
-  rm ./dist/wasm/PandoraPay-wallet-main.wasm.gz
-  rm ./dist/wasm/PandoraPay-wallet-main.wasm.br
+
+  cd ./dist/ || exit
+
+  find . -name "*.gz" -type f -delete
+  find . -name "*.br" -type f -delete
+
+  rm ./wasm/PandoraPay-wallet-helper.wasm
+
+  cd .. || exit
+
 
   node ./init-script.js
 fi

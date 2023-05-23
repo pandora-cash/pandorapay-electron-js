@@ -6,9 +6,11 @@ const files = [
     "!electron-builder-test.js",
     "!release-builder.sh",
     "!release-packager.sh",
+    "!src/electron-entry-app.js",
+    "!init-script.js",
 ]
 
-const config = require('./config')
+const config = require('./src/config')
 const os = require("os");
 
 helperWindowsIgnore = ["!helper/pandora-electron-helper-windows-386.exe", "!helper/pandora-electron-helper-windows-amd64.exe",
