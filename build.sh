@@ -14,7 +14,6 @@ if [[ "$*" == *wasm* ]]; then
 
   cd ../go-pandora-pay/ || exit
   ./scripts/build-wasm.sh main build
-  ./scripts/build-wasm.sh helper build
 
   cd ../pandorapay-electron-js || exit
 fi
