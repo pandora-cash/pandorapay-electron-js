@@ -41,9 +41,7 @@ if [[ "$*" == *wallet* ]]; then
 
   cp -r ./dist/build/* ../pandorapay-electron-js/dist
 
-  cd ../pandorapay-electron-js/ || exit
-
-  cd ./dist/ || exit
+  cd ../pandorapay-electron-js/dist/ || exit
 
   find . -name "*.gz" -type f -delete
   find . -name "*.br" -type f -delete
@@ -51,7 +49,6 @@ if [[ "$*" == *wallet* ]]; then
   rm ./wasm/PandoraPay-wallet-helper.wasm
 
   cd .. || exit
-
 
   node ./init-script.js
 fi
