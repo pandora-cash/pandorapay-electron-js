@@ -1,5 +1,7 @@
 /dist
-/release-builds
+/bin-packager
+/bin-builder
+/_build
 
 # Logs
 logs

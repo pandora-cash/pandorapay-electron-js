@@ -5,11 +5,13 @@ const httpHelper = require('./http-helper')
 const fs = require('fs')
 const exec = require('child_process').execFile;
 const os = require("os");
-const config = require('./config')
+const config = require('./config');
+const logger = require('./logger');
 
-require('dotenv').config();
-console.log("PROXY: ", process.env.PROXY_ADDRESS)
-const helperPort = Number.parseInt( process.env.HELPER_PORT || '25712' )
+require('dotenv').config({override: true});
+
+if (typeof process.env.DEBUG === "string")
+    config.debug = process.env.DEBUG === "true";
 
 let helperChild
 
@@ -32,51 +34,66 @@ function execute(fileName, params, path) {
     }
 }
 
-const WEB_FOLDER = 'dist';
+const WEB_FOLDER = '../dist';
 const PROTOCOL = 'file';
 
-async function start(win){
+async function start(win, page){
     await win.loadURL(url.format({
-        pathname: 'index.html',
+        pathname: page,
         protocol: PROTOCOL + ':',
         slashes: true
     }));
 }
 
-async function createWindow() {
+logger.open();
+
+const helperPort = Number.parseInt( process.env.HELPER_PORT || '25712' )
+
+function getHelperFilePath () {
 
     let arch = os.arch()
     let platform = os.platform()
 
-    console.log("architecture", arch )
-    console.log("platform", platform )
+    if (platform === 'win32') platform = 'windows'
 
+    if (arch === 'mas') arch = 'darwin';
     if (arch === 'x64') arch = 'amd64'
     else if (arch === 'x86' || arch === 'ia32') arch = '386'
-    else {
-        console.error("Invalid architecture", arch)
-        process.exit(0)
-    }
+
+
+    return path.join(__dirname, `helper/pandora-electron-helper-${platform}-${arch}${platform === 'windows' ? '.exe' : ''}`)
+}
+
+
+async function createWindow() {
+
+    logger.log("Creating Window");
+
+    const arch = os.arch()
+    const platform = os.platform()
+
+    logger.log("architecture", arch);
+    logger.log("platform", platform);
 
     if (!process.env.HELPER_DISABLED){
 
-        const filename = () => path.join(__dirname, `helper/pandora-electron-helper-${platform}-${arch}${platform === 'win32' ? '.exe' : ''}`)
+        let filename = getHelperFilePath();
 
-        if ( !fs.existsSync(filename())&& os.arch() === 'x64' )
-            arch = '386'
+        logger.log("Electron helper file path", filename);
 
-        if ( !fs.existsSync( filename() )) {
-            console.error("Electron helper not found", filename() )
+        if ( !fs.existsSync( filename )) {
+            logger.error("Electron helper not found", filename );
             process.exit(0)
         }
-        const out = execute(filename(), [`--tcp-server-port=${helperPort}`, ...config.goArgv ])
+        const out = execute(filename, [`--tcp-server-port=${helperPort}`, ...config.goArgv ])
         out.promise.catch(e => {
-            console.error("There was an error starting the Helper", e)
+            logger.error("There was an error starting the Helper", e)
         })
         helperChild = out.child
     }
 
     electron.protocol.interceptFileProtocol(PROTOCOL, (request, callback) => {
+
         // Strip protocol
         if (typeof request.url !== "string") throw "Invalid string"
 
@@ -99,8 +116,8 @@ async function createWindow() {
 
     // Create the browser window.
     const win = new electron.BrowserWindow( {
-        width: 1200,
-        height: 800,
+        width: 1280,
+        height: 768,
         webPreferences: {
             nodeIntegration: false,
             contextIsolation: true, // protect against prototype pollution
@@ -110,10 +127,11 @@ async function createWindow() {
         center:  true,
     });
 
-    electron.ipcMain.on("toMain", async (event, args )=>{
+    electron.ipcMain.on("toMain", async (event, args ) => {
 
         if (typeof args === "object"){
-            if (args.type === "helper-call"){
+
+            if (args.type === "helper-call" && !process.env.HELPER_DISABLED){
                 try{
                     const out = await electronHelperGet(args.method, args.data )
                     win.webContents.send("fromMain", {type: "helper-answer", id: args.id, out })
@@ -121,19 +139,36 @@ async function createWindow() {
                     win.webContents.send("fromMain", {type: "helper-answer", id: args.id, error: e.toString() })
                 }
             }
+
+            if (args.type === "setup"){
+
+                process.env.SETUP_CONNECTION_PROXY_TYPE = args.data.connectionProxyType;
+                process.env.SETUP_CONNECTION_PROXY_ADDRESS = args.data.connectionProxyAddress;
+
+                await setProxy(win)
+
+            }
+
         }
     })
 
-    // and load the index.html of the app.
-    if (process.env.PROXY_ADDRESS){
-        await win.webContents.session.setProxy({proxyRules:process.env.PROXY_ADDRESS})
-        console.log("starting")
-        await start(win)
-    }else {
-        await start(win)
+    logger.log("Starting js app");
+
+    await start(win, 'index.html')
+
+}
+
+async function setProxy(win){
+
+    if (process.env.SETUP_CONNECTION_PROXY_TYPE === "tor"){
+        await win.webContents.session.setProxy({proxyRules: "socks5://127.0.0.1:9050"})
+    }else if (process.env.SETUP_CONNECTION_PROXY_TYPE === "i2p"){
+        await win.webContents.session.setProxy({proxyRules: "socks5://127.0.0.1:4444"})
+    }else if (process.env.SETUP_CONNECTION_PROXY_TYPE === "proxy"){
+        await win.webContents.session.setProxy({proxyRules: process.env.SETUP_CONNECTION_PROXY_ADDRESS})
     }
 
-
+    logger.log("PROXY SET", process.env.SETUP_CONNECTION_PROXY_TYPE, process.env.SETUP_CONNECTION_PROXY_ADDRESS );
 
 }
 
@@ -144,10 +179,15 @@ electron.app.on("ready", ()=>{
 });
 
 electron.app.on('window-all-closed', () => {
-    if (helperChild){
-        helperChild.kill()
-        helperChild = undefined
+    try{
+        if (helperChild){
+            helperChild.kill()
+            helperChild = undefined
+        }
+    }catch(e){
+        logger.error("Error killing Helper", e)
     }
+
     if (process.platform !== 'darwin') {
         electron.app.quit()
     }
