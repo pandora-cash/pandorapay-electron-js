@@ -1,20 +1,24 @@
 {
   "name": "pandorapay-electron-js",
-  "main": "index.js",
-  "description": "wallet",
+  "main": "src/index.js",
+  "description": "desktop wallet",
   "author": "pandora cash",
+  "email": "xiangwei@pandoracash.com",
   "version": "0.0.1",
+  "build": {
+    "appId": "com.pandora-cash.app"
+  },
   "scripts": {
     "start": "electron .",
     "test-builder": "electron-builder -l --config electron-builder-test.js",
-    "test-packager": "electron-packager . --overwrite --out=release-packager-builds"
+    "test-packager": "electron-packager . --overwrite --out=bin-packager"
   },
   "devDependencies": {
-    "electron": "^20.1.2",
-    "electron-builder": "^23.3.3",
-    "electron-packager": "^15.5.1"
+    "electron": "^24.3.1",
+    "electron-builder": "^24.4.0",
+    "electron-packager": "^17.1.1"
   },
   "dependencies": {
-    "dotenv": "^16.0.2"
+    "dotenv": "^16.0.3"
   }
 }
