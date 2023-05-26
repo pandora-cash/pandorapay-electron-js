@@ -2,7 +2,7 @@ echo "release using electron-packager"
 
 ./build.sh wasm wallet electron-helper
 
-name="pandora cash"
+name="pandora-cash"
 dir="bin-packager"
 
 helperWindows="helper/pandora-electron-helper-windows-386.exe|helper/pandora-electron-helper-windows-amd64.exe|helper/pandora-electron-helper-windows-arm64.exe"
