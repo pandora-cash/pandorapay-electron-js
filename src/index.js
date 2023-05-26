@@ -13,6 +13,9 @@ require('dotenv').config({override: true});
 if (typeof process.env.DEBUG === "string")
     config.debug = process.env.DEBUG === "true";
 
+if (typeof process.env.HELPER_DISABLED === "string")
+    process.env.HELPER_DISABLED = process.env.HELPER_DISABLED === "true"
+
 let helperChild
 
 async function electronHelperGet( method, data ){
@@ -61,7 +64,7 @@ function getHelperFilePath () {
     else if (arch === 'x86' || arch === 'ia32') arch = '386'
 
 
-    return path.join(__dirname, `helper/pandora-electron-helper-${platform}-${arch}${platform === 'windows' ? '.exe' : ''}`)
+    return path.join(__dirname, "..", "helper", `pandora-electron-helper-${platform}-${arch}${platform === 'windows' ? '.exe' : ''}`)
 }
 
 
@@ -75,7 +78,7 @@ async function createWindow() {
     logger.log("architecture", arch);
     logger.log("platform", platform);
 
-    if (!process.env.HELPER_DISABLED){
+    if (!process.env.HELPER_DISABLED ){
 
         let filename = getHelperFilePath();
 
