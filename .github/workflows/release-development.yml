@@ -1,12 +1,12 @@
-#name: Release Development
-#
-#on:
-#  push:
-#    branches: [ "main" ]
-#  pull_request:
-#    branches: [ "main" ]
-#
-#jobs:
+name: Release Development
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
 #  pre-release-linux:
 #    name: "Release Development Linux"
 #    runs-on: ubuntu-latest
