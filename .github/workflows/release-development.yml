@@ -29,7 +29,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo dpkg --add-architecture i386 apt-get update 
+          sudo dpkg --add-architecture i386 
+          sudo apt-get update 
           sudo apt-get install rpm
           sudo apt-get install  wine64 wine32 mono-complete
 
