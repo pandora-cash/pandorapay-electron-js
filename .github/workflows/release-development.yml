@@ -51,7 +51,7 @@ jobs:
       #  run: electron-builder -l --config electron-builder.js
 
       - name: release builder
-        run: electron-builder -l --config electron-builder.js
+        run: electron-builder -l --config electron-builder.js --publish never
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
@@ -107,7 +107,7 @@ jobs:
       #  run: electron-builder -l --config electron-builder.js
 
       - name: release builder
-        run: electron-builder -m --config electron-builder.js
+        run: electron-builder -m --config electron-builder.js --publish never
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
