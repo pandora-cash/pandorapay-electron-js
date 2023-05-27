@@ -61,6 +61,9 @@ jobs:
           title: "Development Build"
           files: |
             ./bin/builder/pandora-cash-wallet-linux-*
+            ./bin/packager/pandora-cash-wallet-darwin-*
+            ./bin/packager/pandora-cash-wallet-mas-*
+            ./bin/packager/pandora-cash-wallet-linux-*
             
 
 #  pre-release-mac:
