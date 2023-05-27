@@ -47,8 +47,8 @@ jobs:
           unzip artifact-electron-helper.zip
           rm artifact-electron-helper.zip          
 
-      #- name: release packager
-      #  run: electron-builder -l --config electron-builder.js
+#      - name: release packager
+#        run: electron-builder -l --config electron-builder.js
 
       - name: release builder
         run: electron-builder -l --config electron-builder.js --publish never
@@ -76,10 +76,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
-
-      - name: Install dependencies
-        run: |
-          sudo apt-get install rpm
 
       - name: Install node dependencies
         run: |
