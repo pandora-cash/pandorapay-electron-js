@@ -127,6 +127,7 @@ jobs:
 
   pre-release-win:
     name: "Release Development Windows"
+    needs: pre-release-linux
     runs-on: windows-latest
 
     steps:
@@ -166,7 +167,7 @@ jobs:
       - name: release builder
         run: electron-builder -w --config electron-builder.js --publish never
 
-      - name: Download Artifact Electron Helper
+      - name: Script create artifacts directory
         run: |
           mkdir ./bin/artifacts          
 
