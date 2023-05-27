@@ -1,3 +1,5 @@
+name="pandora"
+
 if [ $# -eq 0 ]; then
   echo "arguments missing"
 fi
@@ -37,7 +39,7 @@ if [[ "$*" == *wallet* ]]; then
   find . -name "*.gz" -type f -delete
   find . -name "*.br" -type f -delete
 
-  rm ./wasm/PandoraPay-wallet-helper.wasm 2>/dev/null
+  rm ./wasm/${name}-helper.wasm 2>/dev/null
 
   cd .. || exit
 
