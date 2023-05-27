@@ -22,51 +22,65 @@ args=" --overwrite ${name} --prune=true --out=bin/packager"
 argsWin="--icon=assets/icons/win/icon.ico  --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName='${name}'"
 argsLinux="--icon=assets/icons/mac/icon.icns "
 
-getArgsIgnore "$helperWindows|$helperDarwin"
-npx electron-packager ./ $args $argsIgnore --platform=linux --arch=x64,armv7l,arm64 $argsLinux
+if ! [[ "$*" == *no-release-linux* ]]; then
+  getArgsIgnore "$helperWindows|$helperDarwin"
+  npx electron-packager ./ $args $argsIgnore --platform=linux --arch=x64,armv7l,arm64 $argsLinux
 
-getArgsIgnore "$helperLinux|$helperDarwin"
-npx electron-packager ./ $args $argsIgnore --platform=win32 --arch=ia32,x64,arm64 $argsWin
+  #linux
 
-getArgsIgnore "$helperWindows|$helperLinux"
-npx electron-packager ./ $args $argsIgnore --platform=darwin --arch=x64,arm64 $argsLinux
-npx electron-packager ./ $args $argsIgnore --platform=mas --arch=x64,arm64 $argsLinux
+  a="./${dir}/${name}-linux-x64"
+  zip -r $a.zip $a
+
+  a="./${dir}/${name}-linux-arm64"
+  zip -r $a.zip $a
+
+  a="./${dir}/${name}-linux-armv7l"
+  zip -r $a.zip $a
+fi
+
+if ! [[ "$*" == *no-release-windows* ]]; then
+  getArgsIgnore "$helperLinux|$helperDarwin"
+  npx electron-packager ./ $args $argsIgnore --platform=win32 --arch=ia32,x64,arm64 $argsWin
+
+  #windows
+
+  a="./${dir}/${name}-win32-ia32"
+  zip -r $a.zip $a
+
+  a="./${dir}/${name}-win32-x64"
+  zip -r $a.zip $a
+
+  a="./${dir}/${name}-win32-arm64"
+  zip -r $a.zip $a
+
+fi
+
+if ! [[ "$*" == *no-release-darwin* ]]; then
+  getArgsIgnore "$helperWindows|$helperLinux"
+  npx electron-packager ./ $args $argsIgnore --platform=darwin --arch=x64,arm64 $argsLinux
+  npx electron-packager ./ $args $argsIgnore --platform=mas --arch=x64,arm64 $argsLinux
+
+  #macos
+
+  a="./${dir}/${name}-darwin-x64"
+  zip -r $a.zip $a
+
+  a="./${dir}/${name}-darwin-arm64"
+  zip -r $a.zip $a
+
+  #macos mas
+
+  a="./${dir}/${name}-mas-x64"
+  zip -r $a.zip $a
+
+  a="./${dir}/${name}-mas-arm64"
+  zip -r $a.zip $a
+fi
 
 
-#macos
 
-a="./${dir}/${name}-darwin-x64"
-zip -r $a.zip $a
 
-a="./${dir}/${name}-darwin-arm64"
-zip -r $a.zip $a
 
-#macos mas
 
-a="./${dir}/${name}-mas-x64"
-zip -r $a.zip $a
 
-a="./${dir}/${name}-mas-arm64"
-zip -r $a.zip $a
 
-#linux
-
-a="./${dir}/${name}-linux-x64"
-zip -r $a.zip $a
-
-a="./${dir}/${name}-linux-arm64"
-zip -r $a.zip $a
-
-a="./${dir}/${name}-linux-armv7l"
-zip -r $a.zip $a
-
-#windows
-
-a="./${dir}/${name}-win32-ia32"
-zip -r $a.zip $a
-
-a="./${dir}/${name}-win32-x64"
-zip -r $a.zip $a
-
-a="./${dir}/${name}-win32-arm64"
-zip -r $a.zip $a
