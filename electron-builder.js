@@ -26,13 +26,13 @@ module.exports = {
     appId: "com.pandora-cash.app",
     productName: "pandora-cash-wallet",
     artifactName: "${productName}-${os}-${arch}.${ext}",
-    publish: [],
 
     directories: {
         buildResources: 'electron-build',
         output: 'bin/builder',
     },
     mac: {
+        publish: [],
         category: "public.app-category.utilities",
         icon: "assets/icons/mac/icon.icns",
         target: [
@@ -51,6 +51,7 @@ module.exports = {
         ],
     },
     linux: {
+        publish: [],
         category: 'Utility',
         icon: "assets/icons/mac/icon.icns",
         target: [
@@ -74,6 +75,7 @@ module.exports = {
         ]
     },
     win:{
+        publish: [],
         publisherName: config.name,
         target: [
             {target: "nsis", "arch": [ "ia32", "x64" ] },
