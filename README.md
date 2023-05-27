@@ -5,7 +5,7 @@
 2. `npm install` (install node modules)
 3. `npm i -g electron-builder`
 4. `npm i -g electron-packager`
-5. `./build.sh` (build dist files - wasm, electron-helper and wallet bundle )
+5. `bash build.sh wasm electron-helper wallet`
 
 ## Tor/I2P Proxy
 1. install Tor/I2P

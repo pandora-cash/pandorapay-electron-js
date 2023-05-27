@@ -1,13 +1,10 @@
 {
-  "name": "pandorapay-electron-js",
+  "name": "pandora-cash-wallet",
   "main": "src/index.js",
   "description": "desktop wallet",
   "author": "pandora cash",
   "email": "xiangwei@pandoracash.com",
   "version": "0.0.1",
-  "build": {
-    "appId": "com.pandora-cash.app"
-  },
   "scripts": {
     "start": "electron .",
     "test-builder": "electron-builder -l --config electron-builder-test.js",

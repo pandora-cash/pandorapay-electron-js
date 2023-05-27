@@ -1,8 +1,10 @@
 echo "release using electron-packager"
 
-./build.sh wasm wallet electron-helper
+if ! [[ "$*" == *no-build* ]]; then
+  ./build.sh wasm wallet electron-helper
+fi
 
-name="pandora-cash"
+name="pandora-cash-wallet"
 dir="bin/packager"
 
 mkdir -p ${dir}

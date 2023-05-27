@@ -1,0 +1,87 @@
+name: Release Development
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  pre-release:
+    name: "Release Development"
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout wallet
+        uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - name: Install node dependencies
+        run: |    
+          npm install
+          npm i -g electron-builder
+          npm i -g electron-packager
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get install rpm
+          sudo apt-get install  wine64 wine32 mono-complete
+
+      - name: Download Artifact Wallet
+        run: |
+          cd ./dist
+          
+          curl -L  -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" https://github.com/pandora-cash/PandoraPay-wallet/releases/download/development/wallet-build.zip > wallet-build.zip 
+          unzip wallet-build.zip
+          rm wallet-build.zip
+
+      - name: Download Artifact Electron Helper
+        run: |
+          cd ./helper
+          
+          curl -L  -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" https://github.com/pandora-cash/go-pandora-pay/releases/download/development/artifact-electron-helper.zip > artifact-electron-helper.zip 
+          unzip artifact-electron-helper.zip
+          rm artifact-electron-helper.zip          
+
+      - name: release packager
+        run: bash release-packager.sh no-build
+
+      - name: release builder
+        run: bash release-builder.sh no-build
+
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "development"
+          prerelease: true
+          title: "Development Build"
+          files: |
+            ./bin/packager/pandora-cash-wallet-darwin-arm64.zip
+            ./bin/packager/pandora-cash-wallet-darwin-x64.zip
+            ./bin/packager/pandora-cash-wallet-linux-arm64.zip
+            ./bin/packager/pandora-cash-wallet-linux-armv7l.zip
+            ./bin/packager/pandora-cash-wallet-linux-x64.zip
+            ./bin/packager/pandora-cash-wallet-mas-arm64.zip
+            ./bin/packager/pandora-cash-wallet-mas-x64.zip
+            ./bin/packager/pandora-cash-wallet-win32-arm64.zip
+            ./bin/packager/pandora-cash-wallet-win32-ia32.zip
+            ./bin/packager/pandora-cash-wallet-win32-x64.zip
+            ./bin/builder/pandora-cash-wallet-linux-amd64.deb
+            ./bin/builder/pandora-cash-wallet-linux-amd64.snap
+            ./bin/builder/pandora-cash-wallet-linux-x64.tar.gz
+            ./bin/builder/pandora-cash-wallet-linux-x86_64.AppImage
+            ./bin/builder/pandora-cash-wallet-linux-x86_64.rpm
+            ./bin/builder/pandora-cash-wallet-win.exe
+            ./bin/builder/pandora-cash-wallet-win-ia32.exe
+            ./bin/builder/pandora-cash-wallet-win-ia32.exe.blockmap
+            ./bin/builder/pandora-cash-wallet-win-ia32.msi
+            ./bin/builder/pandora-cash-wallet-win-ia32.zip
+            ./bin/builder/pandora-cash-wallet-win-x64.exe
+            ./bin/builder/pandora-cash-wallet-win-x64.exe.blockmap
+            ./bin/builder/pandora-cash-wallet-win-x64.msi
+            ./bin/builder/pandora-cash-wallet-win-x64.zip

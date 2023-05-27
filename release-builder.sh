@@ -1,6 +1,8 @@
 echo "release using electron-builder"
 
-./build.sh wasm wallet electron-helper
+if ! [[ "$*" == *no-build* ]]; then
+  ./build.sh wasm wallet electron-helper
+fi
 
 args="-lw"
 

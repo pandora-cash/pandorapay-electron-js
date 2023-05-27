@@ -23,6 +23,10 @@ helperDarwinIgnore = ["!helper/pandora-electron-helper-darwin-amd64",
 
 module.exports = {
 
+    appId: "com.pandora-cash.app",
+    productName: "pandora-cash-wallet",
+    artifactName: "${productName}-${os}-${arch}.${ext}",
+
     directories: {
         buildResources: 'electron-build',
         output: 'bin/builder',
