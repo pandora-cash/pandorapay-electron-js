@@ -7,11 +7,10 @@
 4. `npm i -g electron-packager`
 5. `./build.sh` (build dist files - wasm, electron-helper and wallet bundle )
 
-## Tor Proxy
-edit `.env` file
-```
-PROXY_ADDRESS=socks5://127.0.0.1:9050
-```
+## Tor/I2P Proxy
+1. install Tor/I2P
+2. start daemon
+3. use wallet setup
 
 ## Debugging
 edit `.env` file

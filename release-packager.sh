@@ -3,17 +3,19 @@ echo "release using electron-packager"
 ./build.sh wasm wallet electron-helper
 
 name="pandora-cash"
-dir="bin-packager"
+dir="bin/packager"
+
+mkdir -p ${dir}
 
 helperWindows="helper/pandora-electron-helper-windows-386.exe|helper/pandora-electron-helper-windows-amd64.exe|helper/pandora-electron-helper-windows-arm64.exe"
 helperLinux="helper/pandora-electron-helper-linux-386|helper/pandora-electron-helper-linux-amd64|helper/pandora-electron-helper-linux-arm64|helper/pandora-electron-helper-linux-armv7l"
 helperDarwin="helper/pandora-electron-helper-darwin-amd64|helper/pandora-electron-helper-darwin-arm64"
 
 getArgsIgnore(){
-	argsIgnore="--ignore='^/(_build|${dir}|bin-builder|build.sh|release-builder.sh|release-packager.sh|init-script.js|.idea|assets|electron-builder.js|electron-builder-test.js|src/electron-entry-app.js|$1)'"
+	argsIgnore="--ignore='^/(_build|${dir}|bin|build.sh|release-builder.sh|release-packager.sh|init-script.js|.idea|assets|electron-builder.js|electron-builder-test.js|src/electron-entry-app.js|$1)'"
 }
 
-args=" --overwrite ${name} --prune=true --out=bin-packager"
+args=" --overwrite ${name} --prune=true --out=bin/packager"
 
 argsWin="--icon=assets/icons/win/icon.ico  --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName='${name}'"
 argsLinux="--icon=assets/icons/mac/icon.icns "
@@ -28,7 +30,6 @@ getArgsIgnore "$helperWindows|$helperLinux"
 npx electron-packager ./ $args $argsIgnore --platform=darwin --arch=x64,arm64 $argsLinux
 npx electron-packager ./ $args $argsIgnore --platform=mas --arch=x64,arm64 $argsLinux
 
-mkdir -p ${dir}
 
 #macos
 

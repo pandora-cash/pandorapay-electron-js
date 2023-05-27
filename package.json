@@ -11,7 +11,7 @@
   "scripts": {
     "start": "electron .",
     "test-builder": "electron-builder -l --config electron-builder-test.js",
-    "test-packager": "electron-packager . --overwrite --out=bin-packager"
+    "test-packager": "electron-packager . --overwrite --out=bin/packager"
   },
   "devDependencies": {
     "electron": "^24.3.1",

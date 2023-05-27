@@ -1,6 +1,5 @@
 /dist
-/bin-packager
-/bin-builder
+/bin
 /_build
 
 # Logs

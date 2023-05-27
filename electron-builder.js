@@ -1,7 +1,6 @@
 const files = [
     "!_build/",
-    "!bin-packager/",
-    "!bin-builder/",
+    "!bin/",
     "!build.sh",
     "!electron-builder-test.js",
     "!release-builder.sh",
@@ -26,7 +25,7 @@ module.exports = {
 
     directories: {
         buildResources: 'electron-build',
-        output: 'bin-builder',
+        output: 'bin/builder',
     },
     mac: {
         category: "public.app-category.utilities",

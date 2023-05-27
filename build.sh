@@ -11,25 +11,15 @@ echo "Running build"
 
 if [[ "$*" == *wasm* ]]; then
   echo "Build Wasm"
-
-  cd ../go-pandora-pay/ || exit
-  ./scripts/build-wasm.sh main build
-
-  cd ../pandorapay-electron-js || exit
+  (cd ../PandoraPay-wallet/; bash build.sh build no-helper)
 fi
 
 if [[ "$*" == *electron-helper* ]]; then
   echo "Build Electron Helper"
 
-  cd ../go-pandora-pay/ || exit
-  ./scripts/build-electron-helper.sh
+  (cd ../go-pandora-pay/; bash scripts/build-electron-helper.sh)
+  cp ../go-pandora-pay/bin/electron-helper/* ./helper
 
-  mkdir -p ../pandorapay-electron-js/helper
-  cp ./builds/electron_helper/bin/* ../pandorapay-electron-js/helper
-  mkdir -p ../pandorapay-electron-js/helper
-  cp ./builds/electron_helper/bin/* ../pandorapay-electron-js/helper
-
-  cd ../pandorapay-electron-js || exit
 fi
 
 if [[ "$*" == *wallet* ]]; then
@@ -38,6 +28,7 @@ if [[ "$*" == *wallet* ]]; then
   cd ../PandoraPay-wallet/ || exit
 
   npm run build-ui --skip-zip -- --mode=production
+  npm run build-webworker-wasm --skip-zip -- --mode=production
 
   cp -r ./dist/build/* ../pandorapay-electron-js/dist
 
@@ -46,7 +37,7 @@ if [[ "$*" == *wallet* ]]; then
   find . -name "*.gz" -type f -delete
   find . -name "*.br" -type f -delete
 
-  rm ./wasm/PandoraPay-wallet-helper.wasm
+  rm ./wasm/PandoraPay-wallet-helper.wasm 2>/dev/null
 
   cd .. || exit
 
