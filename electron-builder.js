@@ -59,7 +59,6 @@ module.exports = {
             "deb",
             "rpm",
             "tar.gz",
-            "apk",
         ],
         vendor: config.name,
         maintainer: config.name,
@@ -75,11 +74,18 @@ module.exports = {
     win:{
         publisherName: config.name,
         target: [
-            {target: "nsis", "arch": [ "ia32", "x64" ] },
+            /**
+             * target: "nsis" throws an error on windows server
+             * spawn EBUSY     failedTask=build stackTrace=Error: spawn EBUSY
+             */
+            ...( process.platform === "linux" ? [ {target: "nsis", "arch": [ "ia32", "x64" ] } ] : [] ), //AppX is supported only on Windows 10 or Windows Server 2012 R2 (version number 6.3+)
             {target: "portable", "arch": [ "ia32", "x64" ] },
             {target: "zip", "arch": [ "ia32", "x64" ] },
             {target: "msi", "arch": [ "ia32", "x64" ] },
-            //"appx", //AppX is supported only on Windows 10 or Windows Server 2012 R2 (version number 6.3+)
+            /**
+             * target: "appx"  is supported only on Windows 10 or Windows Server 2012 R2 (version number 6.3+)
+             */
+            ...( process.platform === "win32" ? [{target: "appx", "arch": [ "ia32", "x64" ] }] : [] ),
         ],
         icon: "assets/icons/win/icon.ico",
         files: [
