@@ -106,4 +106,7 @@ module.exports = {
         "createDesktopShortcut": true,
         "createStartMenuShortcut": true
     },
+    appx:{
+        applicationId: "PandoraCashWallet"
+    }
 }
