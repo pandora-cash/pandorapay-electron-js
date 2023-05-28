@@ -84,14 +84,14 @@ module.exports = {
              * target: "nsis" throws an error on windows server
              * spawn EBUSY     failedTask=build stackTrace=Error: spawn EBUSY
              */
-            ...( process.platform === "linux" ? [ {target: "nsis", arch: [ "ia32", "x64", "x86" ] } ] : [] ), //AppX is supported only on Windows 10 or Windows Server 2012 R2 (version number 6.3+)
-            {target: "portable", arch: [ "ia32", "x64", "x86" ] },
-            {target: "zip", arch: [ "ia32", "x64", "x86" ] },
-            {target: "msi", arch: [ "ia32", "x64", "x86" ] },
+            ...( process.platform === "linux" ? [ {target: "nsis", arch: [ "ia32", "x64", "universal" ] } ] : [] ), //AppX is supported only on Windows 10 or Windows Server 2012 R2 (version number 6.3+)
+            {target: "portable", arch: [ "ia32", "x64", "universal" ] },
+            {target: "zip", arch: [ "ia32", "x64", "universal" ] },
+            {target: "msi", arch: [ "ia32", "x64", "universal" ] },
             /**
              * target: "appx"  is supported only on Windows 10 or Windows Server 2012 R2 (version number 6.3+)
              */
-            ...( process.platform === "win32" ? [{target: "appx", "arch": [ "ia32", "x64", "x86" ] }] : [] ),
+            ...( process.platform === "win32" ? [{target: "appx", "arch": [ "ia32", "x64", "universal" ] }] : [] ),
         ],
         icon: "assets/icons/win/icon.ico",
         files: [
