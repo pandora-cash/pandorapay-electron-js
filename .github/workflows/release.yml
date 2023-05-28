@@ -177,7 +177,7 @@ jobs:
 
   release-upload:
     name: "Upload release"
-    needs: [ pre-release-win, pre-release-mac, pre-release-linux ]
+    needs: [ release-win, release-mac, release-linux ]
     runs-on: ubuntu-latest
 
     steps:
