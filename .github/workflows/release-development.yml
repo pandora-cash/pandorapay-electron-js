@@ -8,6 +8,55 @@ on:
 
 jobs:
 
+  #  requires apple developer account
+  pre-release-mac:
+    name: "Release Development MacOS"
+    runs-on: macos-latest
+
+    steps:
+
+      - name: Checkout wallet
+        uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - name: Install node dependencies
+        run: |
+          npm install
+          npm i -g electron-builder
+          npm i -g electron-packager
+
+      - name: Download Artifact Wallet
+        run: |
+          cd ./dist
+          
+          curl -L  -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" https://github.com/pandora-cash/PandoraPay-wallet/releases/download/development/wallet-build.zip > wallet-build.zip
+          unzip wallet-build.zip
+          rm wallet-build.zip
+
+      - name: Download Artifact Electron Helper
+        run: |
+          cd ./helper
+          
+          curl -L  -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" https://github.com/pandora-cash/go-pandora-pay/releases/download/development/artifact-electron-helper.zip > artifact-electron-helper.zip
+          unzip artifact-electron-helper.zip
+          rm artifact-electron-helper.zip
+
+      - name: release builder
+        run: electron-builder -m --config electron-builder.js --publish never
+
+      - name: Upload mac builds
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifacts-windows
+          path: |
+            ./bin/builder/pandora-cash-wallet-*
+          retention-days: 3
+
+
   pre-release-win:
     name: "Release Development Windows"
     runs-on: windows-latest
@@ -43,9 +92,6 @@ jobs:
           7z x -y artifact-electron-helper.zip
           del artifact-electron-helper.zip                    
 
-      #- name: release packager
-      #  run: bash release-packager.sh
-
       - name: release builder
         run: electron-builder -w --config electron-builder.js --publish never
 
@@ -56,59 +102,6 @@ jobs:
           path: |
             ./bin/builder/pandora-cash-wallet-win-*
           retention-days: 3
-
-  #  requires apple developer account
-#  pre-release-mac:
-#    name: "Release Development MacOS"
-#    runs-on: macos-latest
-#
-#    steps:
-#
-#      - name: Checkout wallet
-#        uses: actions/checkout@v3
-#
-#      - name: Set up Node
-#        uses: actions/setup-node@v3
-#        with:
-#          node-version: 18.x
-#
-#      - name: Install node dependencies
-#        run: |
-#          npm install
-#          npm i -g electron-builder
-#          npm i -g electron-packager
-#
-#      - name: Download Artifact Wallet
-#        run: |
-#          cd ./dist
-#
-#          curl -L  -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" https://github.com/pandora-cash/PandoraPay-wallet/releases/download/development/wallet-build.zip > wallet-build.zip
-#          unzip wallet-build.zip
-#          rm wallet-build.zip
-#
-#      - name: Download Artifact Electron Helper
-#        run: |
-#          cd ./helper
-#
-#          curl -L  -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" https://github.com/pandora-cash/go-pandora-pay/releases/download/development/artifact-electron-helper.zip > artifact-electron-helper.zip
-#          unzip artifact-electron-helper.zip
-#          rm artifact-electron-helper.zip
-#
-#      #- name: release packager
-#      #  run: bash release-packager.sh
-#
-#      - name: release builder
-#        run: electron-builder -m --config electron-builder.js --publish never
-#
-#      - uses: "marvinpinto/action-automatic-releases@latest"
-#        with:
-#          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-#          automatic_release_tag: "development"
-#          prerelease: true
-#          title: "Development Build"
-#          files: |
-#            ./bin/builder/pandora-cash-wallet-mac-*
-
 
   pre-release-linux:
     name: "Release Development Linux"
@@ -155,23 +148,23 @@ jobs:
           
           cd ..
 
-      # release packager for darwin
-      - name: release packager
-        run: bash release-packager.sh no-build no-release-windows no-release-linux
-
-      - name: Display structure of release packager
-        run: |
-          ls
-          rm -r -- ./*/
-        working-directory: bin/packager
-
-      - name: Upload windows builds
-        uses: actions/upload-artifact@v3
-        with:
-          name: artifacts-packager
-          path: |
-            ./bin/packager/pandora-cash-wallet-*
-          retention-days: 3
+#       release packager for darwin
+#      - name: release packager
+#        run: bash release-packager.sh no-build no-release-windows no-release-linux
+#
+#      - name: Display structure of release packager
+#        run: |
+#          ls
+#          rm -r -- ./*/
+#        working-directory: bin/packager
+#
+#      - name: Upload windows packager builds
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: artifacts-packager
+#          path: |
+#            ./bin/packager/pandora-cash-wallet-*
+#          retention-days: 3
 
       - name: release builder
         run: electron-builder -l --config electron-builder.js --publish never
@@ -193,5 +186,4 @@ jobs:
           title: "Development Build"
           files: |
             ./bin/builder/pandora-cash-wallet-*
-            ./bin/artifacts/artifacts-packager/*
-            ./bin/artifacts/artifacts-windows/*
+            ./bin/artifacts/**

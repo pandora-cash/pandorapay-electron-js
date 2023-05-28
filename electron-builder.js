@@ -32,6 +32,7 @@ module.exports = {
         output: 'bin/builder',
     },
     mac: {
+        identity: null, //disable code signing
         category: "public.app-category.utilities",
         icon: "assets/icons/mac/icon.icns",
         target: [
