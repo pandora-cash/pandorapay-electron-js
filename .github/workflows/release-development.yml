@@ -157,10 +157,12 @@ jobs:
 
       # release packager for darwin
       - name: release packager
-        run: bash release-packager.sh no-build no-release-windows no-release-linux delete-unpack
+        run: bash release-packager.sh no-build no-release-windows no-release-linux
 
       - name: Display structure of release packager
-        run: ls
+        run: |
+          ls
+          rm -r -- ./*/
         working-directory: bin/packager
 
       - name: Upload windows builds
@@ -177,13 +179,6 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v3
         with:
-          name: artifacts-windows
-          path: bin/artifacts
-
-      - name: Download artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: artifacts-packager
           path: bin/artifacts
 
       - name: Display structure of artifacts-windows
@@ -198,4 +193,5 @@ jobs:
           title: "Development Build"
           files: |
             ./bin/builder/pandora-cash-wallet-*
-            ./bin/artifacts/pandora-cash-wallet-*
+            ./bin/artifacts/artifacts-packager/*
+            ./bin/artifacts/artifacts-windows/*
