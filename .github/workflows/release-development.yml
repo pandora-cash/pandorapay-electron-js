@@ -155,13 +155,21 @@ jobs:
           
           cd ..
 
-      # release packager for linux and darwin
+      # release packager for darwin
       - name: release packager
-        run: bash release-packager.sh no-build no-release-windows delete-unpack
+        run: bash release-packager.sh no-build no-release-windows no-release-linux delete-unpack
 
-      - name: Display structure of artifacts-windows
+      - name: Display structure of release packager
         run: ls
         working-directory: bin/packager
+
+      - name: Upload windows builds
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifacts-packager
+          path: |
+            ./bin/packager/pandora-cash-wallet-*
+          retention-days: 3
 
       - name: release builder
         run: electron-builder -l --config electron-builder.js --publish never
@@ -170,6 +178,12 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: artifacts-windows
+          path: bin/artifacts
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: artifacts-packager
           path: bin/artifacts
 
       - name: Display structure of artifacts-windows
@@ -184,5 +198,4 @@ jobs:
           title: "Development Build"
           files: |
             ./bin/builder/pandora-cash-wallet-*
-            ./bin/packager/pandora-cash-wallet-*                    
             ./bin/artifacts/pandora-cash-wallet-*

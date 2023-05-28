@@ -29,8 +29,8 @@ if [[ "$*" == *wallet* ]]; then
 
   cd ../PandoraPay-wallet/ || exit
 
-  npm run build-ui --skip-zip -- --mode=production
   npm run build-webworker-wasm --skip-zip -- --mode=production
+  npm run build-ui --skip-zip -- --mode=production
 
   cp -r ./dist/build/* ../pandorapay-electron-js/dist
 
