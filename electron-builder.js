@@ -39,7 +39,7 @@ module.exports = {
         target: [
             "pkg",
             "dmg",
-            //"mas",
+            "mas",
             "7z",
             "zip",
             "tar.gz",
@@ -95,6 +95,7 @@ module.exports = {
             ...helperDarwinIgnore,
             ...helperLinuxIgnore,
         ],
+        verifyUpdateCodeSignature: false,
     },
     dmg: {
         "icon": "assets/icons/mac/icon.icns",

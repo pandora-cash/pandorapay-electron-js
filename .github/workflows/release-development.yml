@@ -46,7 +46,7 @@ jobs:
           rm artifact-electron-helper.zip
 
       - name: release builder
-        run: electron-builder -m --config electron-builder.js --publish never -c.mac.identity=null
+        run: CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder -m --config electron-builder.js --publish never -c.mac.identity=null
 
       - name: Upload mac builds
         uses: actions/upload-artifact@v3
@@ -105,7 +105,6 @@ jobs:
 
   pre-release-linux:
     name: "Release Development Linux"
-    needs: [pre-release-win, pre-release-mac]
     runs-on: ubuntu-latest
 
     steps:
@@ -178,7 +177,7 @@ jobs:
           retention-days: 3
 
   pre-release-upload:
-    name: "Release Development Linux"
+    name: "Upload release"
     needs: [ pre-release-win, pre-release-mac, pre-release-linux ]
     runs-on: ubuntu-latest
 
