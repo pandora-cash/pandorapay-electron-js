@@ -26,6 +26,7 @@ module.exports = {
     appId: "com.pandora-cash.app",
     productName: "pandora-cash-wallet",
     artifactName: "${productName}-${os}-${arch}.${ext}",
+    publish: null,
 
     directories: {
         buildResources: 'electron-build',
@@ -38,7 +39,7 @@ module.exports = {
         target: [
             "pkg",
             "dmg",
-            "mas",
+            //"mas",
             "7z",
             "zip",
             "tar.gz",
