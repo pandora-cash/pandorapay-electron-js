@@ -39,7 +39,8 @@ module.exports = {
         target: [
             "pkg",
             "dmg",
-            "mas",
+            // mas not working without code signing
+            //"mas",
             "7z",
             "zip",
             "tar.gz",
