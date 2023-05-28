@@ -21,6 +21,10 @@ helperLinuxIgnore = ["!helper/pandora-electron-helper-linux-386","!helper/pandor
 helperDarwinIgnore = ["!helper/pandora-electron-helper-darwin-amd64",
     "!helper/pandora-electron-helper-darwin-arm64",]
 
+/**
+ * all supported architectures can be found in https://github.com/electron/electron/releases
+ */
+
 module.exports = {
 
     appId: "com.pandora-cash.app",
@@ -37,13 +41,13 @@ module.exports = {
         category: "public.app-category.utilities",
         icon: "assets/icons/mac/icon.icns",
         target: [
-            "pkg",
-            "dmg",
+            {target: "pkg", arch: [ "x64", "arm64"] },
+            {target: "dmg", arch: [ "x64", "arm64"] },
             // mas not working without code signing
-            //"mas",
-            "7z",
-            "zip",
-            "tar.gz",
+            //{target: "mas", arch: [ "x64", "arm64"] },
+            {target: "7z", arch: [ "x64", "arm64"] },
+            {target: "zip", arch: [ "x64", "arm64"] },
+            {target: "tar.gz", arch: [ "x64", "arm64"] },
         ],
         type: "distribution",
         files: [
@@ -56,12 +60,11 @@ module.exports = {
         category: 'Utility',
         icon: "assets/icons/mac/icon.icns",
         target: [
-            "AppImage",
-            "tar.gz",
-            "snap",
-            "deb",
-            "rpm",
-            "tar.gz",
+            {target: "AppImage", arch: [ "x64", "armv7l", "arm64"] },
+            {target: "snap", arch: [ "x64", "armv7l", "arm64"] },
+            {target: "deb", arch: [ "x64", "armv7l", "arm64"] },
+            {target: "rpm", arch: [ "x64", "armv7l", "arm64"] },
+            {target: "tar.gz", arch: [ "x64", "armv7l", "arm64"] },
         ],
         vendor: config.name,
         maintainer: config.name,
@@ -81,14 +84,14 @@ module.exports = {
              * target: "nsis" throws an error on windows server
              * spawn EBUSY     failedTask=build stackTrace=Error: spawn EBUSY
              */
-            ...( process.platform === "linux" ? [ {target: "nsis", "arch": [ "ia32", "x64" ] } ] : [] ), //AppX is supported only on Windows 10 or Windows Server 2012 R2 (version number 6.3+)
-            {target: "portable", "arch": [ "ia32", "x64" ] },
-            {target: "zip", "arch": [ "ia32", "x64" ] },
-            {target: "msi", "arch": [ "ia32", "x64" ] },
+            ...( process.platform === "linux" ? [ {target: "nsis", arch: [ "ia32", "x64", "arm64" ] } ] : [] ), //AppX is supported only on Windows 10 or Windows Server 2012 R2 (version number 6.3+)
+            {target: "portable", arch: [ "ia32", "x64", "arm64" ] },
+            {target: "zip", arch: [ "ia32", "x64", "arm64" ] },
+            {target: "msi", arch: [ "ia32", "x64", "arm64" ] },
             /**
              * target: "appx"  is supported only on Windows 10 or Windows Server 2012 R2 (version number 6.3+)
              */
-            ...( process.platform === "win32" ? [{target: "appx", "arch": [ "ia32", "x64" ] }] : [] ),
+            ...( process.platform === "win32" ? [{target: "appx", "arch": [ "ia32", "x64", "arm64" ] }] : [] ),
         ],
         icon: "assets/icons/win/icon.ico",
         files: [
