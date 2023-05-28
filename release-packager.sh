@@ -77,7 +77,10 @@ if ! [[ "$*" == *no-release-darwin* ]]; then
   zip -r $a.zip $a
 fi
 
-
+if [[ "$*" == *delete-unpack* ]]; then
+  cd ./${dir} || exit
+  rm -r -- ./*/
+fi
 
 
 

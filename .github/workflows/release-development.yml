@@ -52,7 +52,7 @@ jobs:
       - name: Upload windows builds
         uses: actions/upload-artifact@v3
         with:
-          name: artifacts-linux
+          name: artifacts-windows
           path: |
             ./bin/builder/pandora-cash-wallet-win-*
           retention-days: 3
@@ -153,7 +153,7 @@ jobs:
 
       # release packager for linux and darwin
       - name: release packager
-        run: bash release-packager.sh no-release-windows
+        run: bash release-packager.sh no-build no-release-windows delete-unpack
 
       - name: release builder
         run: electron-builder -l --config electron-builder.js --publish never
@@ -161,10 +161,10 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v3
         with:
-          name: artifacts-linux
+          name: artifacts-windows
           path: bin/artifacts
 
-      - name: Display structure of downloaded files
+      - name: Display structure of artifacts-windows
         run: ls -R
         working-directory: bin/artifacts
 
@@ -176,5 +176,5 @@ jobs:
           title: "Development Build"
           files: |
             ./bin/builder/pandora-cash-wallet-*
-            ./bin/packager/pandora-cash-wallet-*.zip                    
+            ./bin/packager/pandora-cash-wallet-*                    
             ./bin/artifacts/pandora-cash-wallet-*
