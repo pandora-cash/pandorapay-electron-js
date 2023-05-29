@@ -61,9 +61,9 @@ module.exports = {
         icon: "assets/icons/mac/icon.icns",
         target: [
             {target: "AppImage", arch: [ "x64", "armv7l", "arm64"] },
-            {target: "snap", arch: [ "x64", "armv7l", "arm64"] },
-            {target: "deb", arch: [  "armv7l", "arm64"] },
-            {target: "rpm", arch: [  "armv7l", "arm64"] },
+            {target: "snap", arch: [ "x64"] },
+            {target: "deb", arch: [  "x64", "armv7l"] },
+            {target: "rpm", arch: [   "x64", "arm64"] },
             {target: "tar.gz", arch: [ "x64", "armv7l", "arm64"] },
         ],
         vendor: config.name,
